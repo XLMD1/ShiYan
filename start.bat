@@ -2,10 +2,10 @@
 echo === Start Data Analysis System ===
 
 echo Starting Django backend...
-start "Django-Backend" cmd /c "cd /d E:\vs code\code\Python\ShiYan\backend && E:\vs code\code\Python\ShiYan\venv\Scripts\python.exe manage.py runserver 8000"
+start "Django-Backend" /D "E:\vs code\code\Python\ShiYan\backend" E:\vs code\code\Python\ShiYan\venv\Scripts\python.exe manage.py runserver 8000
 
 echo Starting Vue frontend...
-start "Vue-Frontend" cmd /c "cd /d E:\vs code\code\Python\ShiYan\frontend && npm run dev"
+start "Vue-Frontend" /D "E:\vs code\code\Python\ShiYan\frontend" npm run dev
 
 echo.
 echo ==============================
