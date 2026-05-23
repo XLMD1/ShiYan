@@ -1,0 +1,112 @@
+<h2>设计确认 · 第三节：前端页面流程 & 组件设计</h2>
+<p class="subtitle">Vue 3 + Vite + Pinia + Vue Router + ECharts</p>
+
+<div class="section">
+  <h3>页面路由 & 数据管道流程</h3>
+  <div class="mockup">
+    <div class="mockup-header">8 个页面，按分析流程串联</div>
+    <div class="mockup-body">
+
+<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: center; padding: 1rem 0;">
+  <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1rem; text-align: center;">
+    <div style="font-size: 0.7rem; color: var(--muted);">登录/注册</div>
+    <div style="font-weight: 600;">Login → Register</div>
+  </div>
+  <span style="color: var(--accent); font-size: 1.2rem;">→</span>
+  <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1rem; text-align: center;">
+    <div style="font-size: 0.7rem; color: var(--muted);">工作台</div>
+    <div style="font-weight: 600;">Dashboard</div>
+    <div style="font-size: 0.65rem; color: var(--muted);">数据集列表 + 快捷入口</div>
+  </div>
+  <span style="color: var(--accent); font-size: 1.2rem;">→</span>
+  <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1rem; text-align: center;">
+    <div style="font-size: 0.7rem; color: var(--muted);">上传</div>
+    <div style="font-weight: 600;">Upload</div>
+    <div style="font-size: 0.65rem; color: var(--muted);">拖拽上传 + 预览</div>
+  </div>
+  <span style="color: var(--accent); font-size: 1.2rem;">→</span>
+  <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1rem; text-align: center;">
+    <div style="font-size: 0.7rem; color: var(--muted);">清洗</div>
+    <div style="font-weight: 600;">Clean</div>
+    <div style="font-size: 0.65rem; color: var(--muted);">缺失值/异常值报告</div>
+  </div>
+  <span style="color: var(--accent); font-size: 1.2rem;">→</span>
+  <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1rem; text-align: center;">
+    <div style="font-size: 0.7rem; color: var(--muted);">分析</div>
+    <div style="font-weight: 600;">Analysis</div>
+    <div style="font-size: 0.65rem; color: var(--muted);">K-Means / 回归</div>
+  </div>
+  <span style="color: var(--accent); font-size: 1.2rem;">→</span>
+  <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1rem; text-align: center;">
+    <div style="font-size: 0.7rem; color: var(--muted);">可视化</div>
+    <div style="font-weight: 600;">Visualize</div>
+    <div style="font-size: 0.65rem; color: var(--muted);">可配置图表</div>
+  </div>
+  <span style="color: var(--accent); font-size: 1.2rem;">→</span>
+  <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1rem; text-align: center;">
+    <div style="font-size: 0.7rem; color: var(--muted); margin-bottom: 0.1rem;">历史 & 导出</div>
+    <div style="font-weight: 600;">History ↗ Export</div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>可复用组件清单</h3>
+  <table style="width:100%; border-collapse: collapse;">
+    <tr style="border-bottom: 1px solid var(--border);">
+      <th style="text-align:left; padding: 0.5rem 1rem;">组件</th>
+      <th style="text-align:left; padding: 0.5rem 1rem;">职责</th>
+      <th style="text-align:left; padding: 0.5rem 1rem;">被哪些页面使用</th>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">NavBar.vue</td>
+      <td style="padding: 0.5rem 1rem;">顶部导航 + 用户头像 + 退出</td>
+      <td style="padding: 0.5rem 1rem;">全部页面</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">FileUploader.vue</td>
+      <td style="padding: 0.5rem 1rem;">拖拽上传 + 文件类型校验 + 进度条</td>
+      <td style="padding: 0.5rem 1rem;">Upload</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">DataTable.vue</td>
+      <td style="padding: 0.5rem 1rem;">通用表格：排序、分页、列筛选</td>
+      <td style="padding: 0.5rem 1rem;">Upload, Clean, History</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">ChartPanel.vue</td>
+      <td style="padding: 0.5rem 1rem;">ECharts 渲染容器，接收 option 配置</td>
+      <td style="padding: 0.5rem 1rem;">Visualize, Analysis</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">ChartConfig.vue</td>
+      <td style="padding: 0.5rem 1rem;">图表配置面板：类型/轴/颜色选择器</td>
+      <td style="padding: 0.5rem 1rem;">Visualize</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">AnalysisParams.vue</td>
+      <td style="padding: 0.5rem 1rem;">算法参数表单：K值/特征列/因变量</td>
+      <td style="padding: 0.5rem 1rem;">Analysis</td>
+    </tr>
+    <tr>
+      <td style="padding: 0.5rem 1rem;">StatsCard.vue</td>
+      <td style="padding: 0.5rem 1rem;">统计指标卡片：均值/方差/缺失率</td>
+      <td style="padding: 0.5rem 1rem;">Clean, Dashboard</td>
+    </tr>
+  </table>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>状态管理 (Pinia Stores)</h3>
+  <ul>
+    <li><strong>authStore</strong> — 用户登录状态、Token 管理、自动刷新</li>
+    <li><strong>datasetStore</strong> — 当前数据集、预览数据、清洗状态</li>
+    <li><strong>analysisStore</strong> — 分析任务状态、结果缓存</li>
+    <li><strong>chartStore</strong> — 图表配置、ECharts option 生成</li>
+  </ul>
+</div>
+
+<p style="color: var(--accent); margin-top: 1.5rem;">前端页面流程和组件划分是否符合你的预期？</p>

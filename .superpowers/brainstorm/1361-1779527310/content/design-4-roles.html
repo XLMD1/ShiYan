@@ -1,0 +1,100 @@
+<h2>设计确认 · 第四节：团队角色分工</h2>
+<p class="subtitle">5-6 人团队，前后端并行开发</p>
+
+<div class="section">
+  <h3>角色分配方案</h3>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-body">
+        <h3 style="color: var(--accent);">角色 1：后端组长 + 数据模型</h3>
+        <p style="font-size: 0.85rem;">负责 Django 项目搭建、User/Dataset/AnalysisTask/ChartConfig 四个模型设计、DRF 配置、JWT 认证中间件。把控后端整体架构。</p>
+        <div class="label" style="margin-top: 0.5rem;">关键交付：用户可注册登录，文件可上传入库</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 style="color: var(--accent);">角色 2：数据清洗 + 导出</h3>
+        <p style="font-size: 0.85rem;">负责 Pandas 数据加载、缺失值处理（均值/中位数/删除）、异常值检测（IQR/Z-score）、数据统计报告生成、CSV/Excel 导出。编写 cleaning.py。</p>
+        <div class="label" style="margin-top: 0.5rem;">关键交付：清洗接口返回前后对比报告</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 style="color: var(--accent);">角色 3：分析算法 + 图表数据</h3>
+        <p style="font-size: 0.85rem;">负责 scikit-learn K-Means 聚类（肘部法则选K、轮廓系数）、线性回归（R²/MSE评估）、结果转为图表 JSON 数据。编写 clustering.py / regression.py / visualization.py。</p>
+        <div class="label" style="margin-top: 0.5rem;">关键交付：分析接口返回聚类结果+回归拟合数据</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 style="color: var(--accent);">角色 4：前端组长 + 核心页面</h3>
+        <p style="font-size: 0.85rem;">负责 Vue 3 项目搭建（Vite）、路由配置、Pinia stores、Axios 封装、登录/注册/Dashboard/Upload 页面。把控前端整体架构和组件规范。</p>
+        <div class="label" style="margin-top: 0.5rem;">关键交付：前端骨架跑通，认证流完整</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 style="color: var(--accent);">角色 5：可视化 + 分析页面</h3>
+        <p style="font-size: 0.85rem;">负责 ECharts 集成、ChartPanel/ChartConfig 组件、Analysis/Visualize 页面、图表配置面板（类型选择/轴映射/颜色）、分析结果展示。</p>
+        <div class="label" style="margin-top: 0.5rem;">关键交付：6种图表可配置生成</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 style="color: var(--muted);">角色 6（可选）：测试 + 部署 + 文档</h3>
+        <p style="font-size: 0.85rem;">负责前后端联调测试、接口测试、响应式布局适配、Django+Vue 部署配置、实验报告撰写。如果只有5人，此角色由前后端组长分担。</p>
+        <div class="label" style="margin-top: 0.5rem;">关键交付：部署文档 + 实验报告</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>开发阶段规划</h3>
+  <table style="width:100%; border-collapse: collapse;">
+    <tr style="border-bottom: 1px solid var(--border);">
+      <th style="text-align:left; padding: 0.5rem 1rem; width: 15%;">阶段</th>
+      <th style="text-align:left; padding: 0.5rem 1rem; width: 25%;">后端 (角色1-3)</th>
+      <th style="text-align:left; padding: 0.5rem 1rem; width: 25%;">前端 (角色4-5)</th>
+      <th style="text-align:left; padding: 0.5rem 1rem;">接口对接</th>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">1. 项目搭建</td>
+      <td style="padding: 0.5rem 1rem;">Django项目+模型+JWT</td>
+      <td style="padding: 0.5rem 1rem;">Vue项目+路由+Axios</td>
+      <td style="padding: 0.5rem 1rem;">认证 API 联调</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">2. 数据管理</td>
+      <td style="padding: 0.5rem 1rem;">上传/预览/导出 API</td>
+      <td style="padding: 0.5rem 1rem;">Upload + Dashboard 页</td>
+      <td style="padding: 0.5rem 1rem;">文件上传联调</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">3. 数据清洗</td>
+      <td style="padding: 0.5rem 1rem;">清洗逻辑+统计报告</td>
+      <td style="padding: 0.5rem 1rem;">Clean 页 + DataTable</td>
+      <td style="padding: 0.5rem 1rem;">清洗结果展示</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">4. 分析可视化</td>
+      <td style="padding: 0.5rem 1rem;">K-Means+回归+图表JSON</td>
+      <td style="padding: 0.5rem 1rem;">Analysis + Visualize 页</td>
+      <td style="padding: 0.5rem 1rem;">分析+图表联调</td>
+    </tr>
+    <tr>
+      <td style="padding: 0.5rem 1rem;">5. 集成部署</td>
+      <td style="padding: 0.5rem 1rem;">静态文件服务配置</td>
+      <td style="padding: 0.5rem 1rem;">build + 部署测试</td>
+      <td style="padding: 0.5rem 1rem;">全流程联调</td>
+    </tr>
+  </table>
+</div>
+
+<p style="color: var(--accent); margin-top: 1.5rem;">角色分工和开发阶段是否符合你的团队情况？</p>

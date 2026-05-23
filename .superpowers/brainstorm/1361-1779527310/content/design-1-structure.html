@@ -1,0 +1,72 @@
+<h2>设计确认 · 第一节：项目目录结构</h2>
+<p class="subtitle">前后端分离，两个子项目独立开发，接口通过 REST API 通信</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">Django 后端 (backend/)</div>
+    <div class="mockup-body" style="font-family: monospace; font-size: 0.85rem; line-height: 1.6;">
+backend/<br>
+├── config/&emsp;&emsp;&emsp;&emsp;<span style="color:var(--muted)"># Django 项目配置</span><br>
+│&emsp;&emsp;├── settings.py<br>
+│&emsp;&emsp;├── urls.py<br>
+│&emsp;&emsp;└── wsgi.py<br>
+├── apps/<br>
+│&emsp;&emsp;├── accounts/&emsp;&emsp;<span style="color:var(--muted)"># 用户模块</span><br>
+│&emsp;&emsp;│&emsp;&emsp;├── models.py<br>
+│&emsp;&emsp;│&emsp;&emsp;├── views.py<br>
+│&emsp;&emsp;│&emsp;&emsp;└── serializers.py<br>
+│&emsp;&emsp;├── datafile/&emsp;&emsp;<span style="color:var(--muted)"># 数据文件管理</span><br>
+│&emsp;&emsp;│&emsp;&emsp;├── models.py&emsp;&emsp;<span style="color:var(--muted)"># 上传文件记录</span><br>
+│&emsp;&emsp;│&emsp;&emsp;├── views.py&emsp;&emsp;<span style="color:var(--muted)"># 上传/预览/导出</span><br>
+│&emsp;&emsp;│&emsp;&emsp;└── cleaning.py&emsp;<span style="color:var(--muted)"># 清洗逻辑</span><br>
+│&emsp;&emsp;└── analysis/&emsp;&emsp;<span style="color:var(--muted)"># 分析引擎</span><br>
+│&emsp;&emsp;&ensp;&nbsp;&nbsp;├── clustering.py&emsp;<span style="color:var(--muted)"># K-Means</span><br>
+│&emsp;&emsp;&ensp;&nbsp;&nbsp;├── regression.py&emsp;<span style="color:var(--muted)"># 线性回归</span><br>
+│&emsp;&emsp;&ensp;&nbsp;&nbsp;├── visualization.py<span style="color:var(--muted)"># 图表数据生成</span><br>
+│&emsp;&emsp;&ensp;&nbsp;&nbsp;└── views.py<br>
+├── media/&emsp;&emsp;&emsp;&emsp;&emsp;<span style="color:var(--muted)"># 用户上传文件</span><br>
+└── requirements.txt
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Vue 3 前端 (frontend/)</div>
+    <div class="mockup-body" style="font-family: monospace; font-size: 0.85rem; line-height: 1.6;">
+frontend/<br>
+├── src/<br>
+│&emsp;&emsp;├── views/&emsp;&emsp;&emsp;&emsp;<span style="color:var(--muted)"># 页面级组件</span><br>
+│&emsp;&emsp;│&emsp;&emsp;├── LoginView.vue<br>
+│&emsp;&emsp;│&emsp;&emsp;├── RegisterView.vue<br>
+│&emsp;&emsp;│&emsp;&emsp;├── DashboardView.vue<br>
+│&emsp;&emsp;│&emsp;&emsp;├── UploadView.vue<br>
+│&emsp;&emsp;│&emsp;&emsp;├── CleanView.vue<br>
+│&emsp;&emsp;│&emsp;&emsp;├── AnalysisView.vue<br>
+│&emsp;&emsp;│&emsp;&emsp;├── VisualizeView.vue<br>
+│&emsp;&emsp;│&emsp;&emsp;└── HistoryView.vue<br>
+│&emsp;&emsp;├── components/&emsp;&emsp;<span style="color:var(--muted)"># 可复用组件</span><br>
+│&emsp;&emsp;│&emsp;&emsp;├── DataTable.vue<br>
+│&emsp;&emsp;│&emsp;&emsp;├── ChartPanel.vue<br>
+│&emsp;&emsp;│&emsp;&emsp;├── ChartConfig.vue<br>
+│&emsp;&emsp;│&emsp;&emsp;├── FileUploader.vue<br>
+│&emsp;&emsp;│&emsp;&emsp;└── NavBar.vue<br>
+│&emsp;&emsp;├── router/<br>
+│&emsp;&emsp;├── stores/&emsp;&emsp;&emsp;&emsp;<span style="color:var(--muted)"># Pinia 状态</span><br>
+│&emsp;&emsp;└── api/&emsp;&emsp;&emsp;&emsp;&emsp;<span style="color:var(--muted)"># Axios 封装</span><br>
+├── public/<br>
+├── package.json<br>
+└── vite.config.js
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>关键设计决策</h3>
+  <ul>
+    <li><strong>Django apps 三层拆分：</strong>accounts（用户）、datafile（数据管理+清洗）、analysis（分析+可视化），职责清晰互不干扰</li>
+    <li><strong>Vue 页面按流程排列：</strong>每个 View 对应数据管道的一个阶段（上传→清洗→分析→可视化），用户按顺序操作</li>
+    <li><strong>可视化数据在后端生成：</strong>Python 端用 Matplotlib/Plotly 生成图表 JSON 数据，前端 ECharts 纯渲染，避免 Python→JS 算法重复实现</li>
+    <li><strong>最终部署：</strong>Vue build 产物复制到 Django static/，一个端口统一服务</li>
+  </ul>
+</div>
+
+<p style="color: var(--accent); margin-top: 1.5rem;">这个目录结构是否符合你的预期？有什么需要调整的吗？</p>

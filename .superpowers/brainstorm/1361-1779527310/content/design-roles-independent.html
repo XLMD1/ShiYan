@@ -1,0 +1,115 @@
+<h2>设计修订：4 人独立模块分工</h2>
+<p class="subtitle">每人一个 Django App + 对应的 Vue 页面/组件，代码不交叉，可独立 MR</p>
+
+<div class="cards">
+  <div class="card">
+    <div class="card-body">
+      <div class="label">阶段1（先行）</div>
+      <h3 style="color: var(--accent);">角色 A：项目基础 + 认证模块</h3>
+      <div style="font-size: 0.85rem; margin-top: 0.5rem;">
+        <p><strong>Django App：</strong> accounts</p>
+        <p><strong>模型：</strong> 无新增（用 Django User）</p>
+        <p><strong>API：</strong> register / login / me</p>
+        <p><strong>Vue 页面：</strong> LoginView, RegisterView</p>
+        <p><strong>Vue 组件：</strong> NavBar</p>
+        <p><strong>基础设施：</strong> Django 项目骨架、Vue 项目骨架、路由守卫、Axios 封装、JWT 配置</p>
+      </div>
+      <div class="label" style="margin-top: 0.75rem; background: var(--accent); color: #fff;">先行交付，其他人 fork 此分支</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="label">阶段2（并行）</div>
+      <h3>角色 B：数据管理模块</h3>
+      <div style="font-size: 0.85rem; margin-top: 0.5rem;">
+        <p><strong>Django App：</strong> datafile</p>
+        <p><strong>模型：</strong> Dataset</p>
+        <p><strong>API：</strong> upload / list / detail / preview / delete / export</p>
+        <p><strong>Vue 页面：</strong> DashboardView, UploadView</p>
+        <p><strong>Vue 组件：</strong> FileUploader, DataTable</p>
+        <p><strong>依赖：</strong> 仅依赖 accounts 的 JWT 认证</p>
+      </div>
+      <div class="label" style="margin-top: 0.75rem;">独立 App + 独立页面，可单独 MR</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="label">阶段2（并行）</div>
+      <h3>角色 C：清洗+分析模块</h3>
+      <div style="font-size: 0.85rem; margin-top: 0.5rem;">
+        <p><strong>Django App：</strong> analysis</p>
+        <p><strong>模型：</strong> AnalysisTask, ChartConfig</p>
+        <p><strong>Pure Python：</strong> cleaning.py, clustering.py, regression.py</p>
+        <p><strong>API：</strong> clean / stats / kmeans / regression / chart-generate / tasks / configs</p>
+        <p><strong>Vue 页面：</strong> CleanView, AnalysisView</p>
+        <p><strong>Vue 组件：</strong> AnalysisParams, StatsCard</p>
+        <p><strong>依赖：</strong> 仅依赖 Dataset 模型（读取文件路径）</p>
+      </div>
+      <div class="label" style="margin-top: 0.75rem;">独立 App + 独立页面，可单独 MR</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="label">阶段2（并行）</div>
+      <h3>角色 D：可视化+历史模块</h3>
+      <div style="font-size: 0.85rem; margin-top: 0.5rem;">
+        <p><strong>Django App：</strong> 无（纯前端 + 调用 C 的 API）</p>
+        <p><strong>Vue 页面：</strong> VisualizeView, HistoryView</p>
+        <p><strong>Vue 组件：</strong> ChartPanel, ChartConfig（图表选择器+参数面板）</p>
+        <p><strong>ECharts：</strong> 6 种图表渲染+配置面板</p>
+        <p><strong>响应式布局：</strong> 全局 CSS 适配</p>
+        <p><strong>依赖：</strong> 仅依赖 C 的图表 API 格式约定</p>
+      </div>
+      <div class="label" style="margin-top: 0.75rem;">独立页面，可单独 MR</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>独立性保障规则</h3>
+  <table style="width:100%; border-collapse: collapse;">
+    <tr style="border-bottom: 1px solid var(--border);">
+      <th style="text-align:left; padding: 0.5rem 1rem; width: 8%;">规则</th>
+      <th style="text-align:left; padding: 0.5rem 1rem;">说明</th>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">1</td>
+      <td style="padding: 0.5rem 1rem;"><strong>一人一 App：</strong>每个 Django App 只由一人修改，不跨角色编辑同一个文件</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">2</td>
+      <td style="padding: 0.5rem 1rem;"><strong>Vue 页面/组件不共享：</strong>每人的 Vue 页面和组件在自己的目录下，通过路由和 props 对接</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">3</td>
+      <td style="padding: 0.5rem 1rem;"><strong>接口先约定：</strong>A 先交付基础骨架 + API 文档，B/C/D 基于约定接口并行开发，不等人</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">4</td>
+      <td style="padding: 0.5rem 1rem;"><strong>Git 分支策略：</strong>A 在主分支搭骨架 → B/C/D 各自开 feature 分支 → 分别 MR 合入</td>
+    </tr>
+    <tr>
+      <td style="padding: 0.5rem 1rem;">5</td>
+      <td style="padding: 0.5rem 1rem;"><strong>Pinia Store 也分人：</strong>auth (A)、dataset (B)、analysis (C)、chart (D)，各自维护</td>
+    </tr>
+  </table>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>MR 流程示意</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="font-family: monospace; font-size: 0.85rem; line-height: 2; padding: 1rem;">
+main:  A 搭骨架 ──┬── B 分支: feature/datafile ──→ MR#2 合入<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ├── C 分支: feature/analysis ──→ MR#3 合入<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; └── D 分支: feature/visualize ──→ MR#4 合入<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;↓<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 最终集成测试
+    </div>
+  </div>
+  <p style="margin-top: 0.75rem;">B/C/D 并行开发，每人只改自己的 App + 自己的 Vue 文件，不会产生合并冲突。</p>
+</div>
+
+<p style="color: var(--accent); margin-top: 1.5rem;">这个独立模块分工是否满足你的要求？</p>

@@ -1,0 +1,82 @@
+<h2>推荐数据集方案</h2>
+<p class="subtitle">每个数据集都同时支持 K-Means 聚类和线性回归分析，CSV 格式，< 5MB</p>
+
+<div class="options" data-multiselect>
+  <div class="option" data-choice="mall" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Mall Customer Segmentation</h3>
+      <p>200条记录 · 5字段 · Kaggle 热门数据集</p>
+      <div class="pros-cons" style="margin-top: 0.75rem;">
+        <div class="pros">
+          <h4>适合做什么</h4>
+          <ul>
+            <li><strong>K-Means：</strong>按 Annual Income + Spending Score 聚类，分3-5个客群</li>
+            <li><strong>回归：</strong>用 Age + Income 预测 Spending Score</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>注意事项</h4>
+          <ul>
+            <li>数据量偏小（200条）</li>
+            <li>特征维度较少，降维展示效果有限</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="housing" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>California Housing Prices</h3>
+      <p>20,640条记录 · 10字段 · scikit-learn 内置</p>
+      <div class="pros-cons" style="margin-top: 0.75rem;">
+        <div class="pros">
+          <h4>适合做什么</h4>
+          <ul>
+            <li><strong>回归：</strong>用房屋特征（位置、房间数、收入）预测房价，R² 效果显著</li>
+            <li><strong>K-Means：</strong>对地区聚类（高/中/低价区域），地理可视化</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>注意事项</h4>
+          <ul>
+            <li>数据量大，清洗流程演示效果好</li>
+            <li>需要归一化处理（特征量纲差异大）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="wine" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Wine Quality</h3>
+      <p>6,497条记录 · 12字段 · UCI / Kaggle</p>
+      <div class="pros-cons" style="margin-top: 0.75rem;">
+        <div class="pros">
+          <h4>适合做什么</h4>
+          <ul>
+            <li><strong>回归：</strong>用理化指标（酸度、糖分、酒精度）预测质量评分</li>
+            <li><strong>K-Means：</strong>按化学成分聚类，看是否与质量等级吻合</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>注意事项</h4>
+          <ul>
+            <li>字段名偏专业（需做中文映射）</li>
+            <li>质量评分分布不均（5-6分占多数）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>我的推荐：A + B 双数据集方案</h3>
+  <p>Mall Customers 作为<strong>入门演示</strong>（快速看到完整流程），California Housing 作为<strong>深度分析</strong>（展示大规模数据清洗+复杂建模）。两个加一起不到 2MB，系统支持切换数据集更体现完整性。</p>
+  <p style="color: var(--accent);">如果只选一个，选 <strong>B (California Housing)</strong>，数据量够大、分析场景丰富、清洗流程有内容可做。</p>
+</div>

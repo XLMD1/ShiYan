@@ -1,0 +1,65 @@
+<h2>设计确认 · 第二节：数据模型 & API 设计</h2>
+<p class="subtitle">Django ORM 模型关系 + REST API 端点清单</p>
+
+<div class="section">
+  <h3>核心数据模型 (ER 关系)</h3>
+  <div class="mockup">
+    <div class="mockup-header">4 个核心模型，外键关联</div>
+    <div class="mockup-body" style="font-family: monospace; font-size: 0.82rem; line-height: 1.7;">
+<span style="color:var(--accent);">User</span> (Django 内置)<br>
+│  id, username, email, password, date_joined<br>
+│<br>
+├── 1:N ── <span style="color:var(--accent);">Dataset</span><br>
+│&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;id, user(FK), name, file_path, file_type(CSV/Excel),<br>
+│&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;rows, columns, uploaded_at, is_cleaned<br>
+│<br>
+├── 1:N ── <span style="color:var(--accent);">AnalysisTask</span><br>
+│&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;id, user(FK), dataset(FK), task_type(KMeans/Regression),<br>
+│&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;parameters(JSON), result_data(JSON), metrics(JSON),<br>
+│&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;created_at, status(pending/running/done/error)<br>
+│<br>
+└── 1:N ── <span style="color:var(--accent);">ChartConfig</span><br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;id, user(FK), analysis_task(FK), chart_type,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;x_column, y_column, color_column, title,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;config(JSON), created_at
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>REST API 端点</h3>
+  <div class="mockup">
+    <div class="mockup-header">共 16 个 API，按模块分组</div>
+    <div class="mockup-body" style="font-family: monospace; font-size: 0.8rem; line-height: 1.6;">
+
+<strong style="color:var(--accent);">认证模块</strong>
+POST   /api/auth/register/&emsp;&emsp;&emsp;<span style="color:var(--muted)"># 注册</span>
+POST   /api/auth/login/&emsp;&emsp;&emsp;&emsp;&emsp;<span style="color:var(--muted)"># 登录，返回 Token</span>
+GET    /api/auth/me/&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span style="color:var(--muted)"># 当前用户信息</span>
+
+<strong style="color:var(--accent);">数据管理模块</strong>
+POST   /api/datasets/upload/&emsp;&emsp;<span style="color:var(--muted)"># 上传文件 + 解析元信息</span>
+GET    /api/datasets/&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span style="color:var(--muted)"># 我的数据集列表</span>
+GET    /api/datasets/{id}/&emsp;&emsp;&emsp;<span style="color:var(--muted)"># 数据集详情</span>
+GET    /api/datasets/{id}/preview/&emsp;<span style="color:var(--muted)"># 前100行预览 (支持分页)</span>
+DELETE /api/datasets/{id}/&emsp;&emsp;&emsp;<span style="color:var(--muted)"># 删除数据集</span>
+
+<strong style="color:var(--accent);">数据清洗模块</strong>
+POST   /api/datasets/{id}/clean/&emsp;<span style="color:var(--muted)"># 执行清洗，返回清洗报告</span>
+GET    /api/datasets/{id}/stats/&emsp;&emsp;<span style="color:var(--muted)"># 数据概览：缺失值/异常值/分布</span>
+GET    /api/datasets/{id}/export/&emsp;<span style="color:var(--muted)"># 导出清洗后数据 (CSV/Excel)</span>
+
+<strong style="color:var(--accent);">分析模块</strong>
+POST   /api/analysis/kmeans/&emsp;&emsp;<span style="color:var(--muted)"># 执行 K-Means，参数: K值、特征列</span>
+POST   /api/analysis/regression/&emsp;<span style="color:var(--muted)"># 执行线性回归，参数: 自变量/因变量</span>
+GET    /api/analysis/tasks/&emsp;&emsp;&emsp;<span style="color:var(--muted)"># 分析历史记录</span>
+GET    /api/analysis/tasks/{id}/&emsp;<span style="color:var(--muted)"># 单次分析详情+结果</span>
+
+<strong style="color:var(--accent);">可视化模块</strong>
+POST   /api/charts/generate/&emsp;&emsp;<span style="color:var(--muted)"># 根据配置生成图表数据 (返JSON给ECharts)</span>
+GET    /api/charts/configs/&emsp;&emsp;&emsp;<span style="color:var(--muted)"># 用户保存的图表配置</span>
+    </div>
+  </div>
+</div>
+
+<p style="color: var(--accent); margin-top: 1.5rem;">数据模型和 API 设计是否符合你的预期？</p>

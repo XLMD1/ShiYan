@@ -1,0 +1,117 @@
+<h2>需求汇总 & 系统架构方案</h2>
+<p class="subtitle">Django + Vue 3 · K-Means + 线性回归 · 双数据集 · 多用户 · 可配置图表</p>
+
+<div class="section">
+  <h3>技术栈确认</h3>
+  <table style="width:100%; border-collapse: collapse;">
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem; color: var(--muted);">后端框架</td>
+      <td style="padding: 0.5rem 1rem;"><strong>Django</strong> + Django REST Framework</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem; color: var(--muted);">前端框架</td>
+      <td style="padding: 0.5rem 1rem;"><strong>Vue 3</strong> + Vite + ECharts</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem; color: var(--muted);">数据分析</td>
+      <td style="padding: 0.5rem 1rem;">Pandas + scikit-learn (K-Means + LinearRegression)</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem; color: var(--muted);">数据集</td>
+      <td style="padding: 0.5rem 1rem;">Mall Customers (演示) + California Housing (深度)</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem; color: var(--muted);">用户系统</td>
+      <td style="padding: 0.5rem 1rem;">注册/登录 + 独立数据空间 + 历史记录检索</td>
+    </tr>
+    <tr>
+      <td style="padding: 0.5rem 1rem; color: var(--muted);">图表</td>
+      <td style="padding: 0.5rem 1rem;">用户可配置：类型/轴/颜色，6种图表起</td>
+    </tr>
+  </table>
+</div>
+
+<div class="section">
+  <h3>三种架构方案对比</h3>
+</div>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>前后端完全分离</h3>
+      <p>Django 纯 API + Vue SPA 独立开发，通过 REST 通信</p>
+      <div class="pros-cons" style="margin-top: 0.75rem;">
+        <div class="pros">
+          <h4>优势</h4>
+          <ul>
+            <li>5-6人团队可并行开发，后端/前端各自独立</li>
+            <li>API 接口清晰，Swagger 自动文档便于对接</li>
+            <li>部署时 Vue build 放 Django static 即可统一服务</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>挑战</h4>
+          <ul>
+            <li>需要处理 CORS（开发阶段）</li>
+            <li>需要维护 API 接口约定</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Django 模板内嵌 Vue 组件</h3>
+      <p>Django 渲染页面，Vue 作为增强组件嵌入模板</p>
+      <div class="pros-cons" style="margin-top: 0.75rem;">
+        <div class="pros">
+          <h4>优势</h4>
+          <ul>
+            <li>单项目结构，Django 模板直出，部署最简单</li>
+            <li>不需要 CORS / JWT 配置，Session 认证直用</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>挑战</h4>
+          <ul>
+            <li>前后端代码耦合，不便于团队并行开发</li>
+            <li>ECharts 动态交互受限于模板内组件通信方式</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Nuxt 3 全栈（Django 退为计算引擎）</h3>
+      <p>Nuxt 处理 Web 层，Django 仅作为数据分析计算服务</p>
+      <div class="pros-cons" style="margin-top: 0.75rem;">
+        <div class="pros">
+          <h4>优势</h4>
+          <ul>
+            <li>Vue 生态最现代方案，SSR/CSR 自动切换</li>
+            <li>前后端同构，开发体验好</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>挑战</h4>
+          <ul>
+            <li>新技术栈，团队学习成本高</li>
+            <li>Django 的认证/ORM 优势被削弱</li>
+            <li>对课程实验来说过度设计</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>推荐方案 A：前后端完全分离</h3>
+  <p>最匹配 <strong>5-6人团队并行开发</strong> 的需求。后端3人（Django API + 数据分析逻辑），前端2-3人（Vue组件 + ECharts）。接口通过 DRF 的 Browsable API 实时调试，Swagger 自动生成文档。最终部署时 Vue build 产物放入 Django static 目录，统一由一个 Django 进程服务。</p>
+</div>

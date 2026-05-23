@@ -1,0 +1,88 @@
+<h2>设计确认 · 第四节（修订）：4人团队分工</h2>
+<p class="subtitle">每人负责一个完整模块，后端2人 + 前端2人</p>
+
+<div class="section">
+  <h3>角色分配方案（4人）</h3>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-body">
+        <h3 style="color: var(--accent);">角色 1：后端架构 + 用户系统</h3>
+        <p style="font-size: 0.85rem;">Django 项目搭建、User/Dataset/AnalysisTask/ChartConfig 四个模型、DRF + JWT 认证、文件上传/预览/导出 API、数据集 CRUD。</p>
+        <div class="label" style="margin-top: 0.5rem;">交付：认证可用的后端骨架 + 数据管理 API</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 style="color: var(--accent);">角色 2：数据清洗 + 分析算法</h3>
+        <p style="font-size: 0.85rem;">Pandas 数据加载与清洗（缺失值/异常值）、统计报告生成、scikit-learn K-Means + 线性回归、结果转图表 JSON、算法效果评估指标。</p>
+        <div class="label" style="margin-top: 0.5rem;">交付：清洗 + 聚类 + 回归完整分析链路</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 style="color: var(--accent);">角色 3：前端架构 + 基础页面</h3>
+        <p style="font-size: 0.85rem;">Vue 3 + Vite 项目搭建、路由配置、Pinia stores、Axios 封装、登录/注册/Dashboard/Upload/Clean 页面、DataTable/FileUploader/NavBar 组件。</p>
+        <div class="label" style="margin-top: 0.5rem;">交付：前端骨架 + 数据管理流程可跑通</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 style="color: var(--accent);">角色 4：可视化 + 部署文档</h3>
+        <p style="font-size: 0.85rem;">ECharts 集成、ChartPanel/ChartConfig 组件、Analysis/Visualize/History 页面、图表配置面板（散点/折线/柱状/热力/箱线/饼图）、Django+Vue 部署配置、实验报告。</p>
+        <div class="label" style="margin-top: 0.5rem;">交付：6种可配置图表 + 部署文档</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>开发阶段（5 阶段并行推进）</h3>
+  <table style="width:100%; border-collapse: collapse;">
+    <tr style="border-bottom: 1px solid var(--border);">
+      <th style="text-align:left; padding: 0.5rem 1rem; width: 12%;">阶段</th>
+      <th style="text-align:left; padding: 0.5rem 1rem; width: 22%;">角色1 (后端架构)</th>
+      <th style="text-align:left; padding: 0.5rem 1rem; width: 22%;">角色2 (算法)</th>
+      <th style="text-align:left; padding: 0.5rem 1rem; width: 22%;">角色3 (前端骨架)</th>
+      <th style="text-align:left; padding: 0.5rem 1rem;">角色4 (可视化)</th>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">1. 搭建</td>
+      <td style="padding: 0.5rem 1rem;">Django+模型+JWT</td>
+      <td style="padding: 0.5rem 1rem;">数据集准备+调研</td>
+      <td style="padding: 0.5rem 1rem;">Vue+路由+Axios</td>
+      <td style="padding: 0.5rem 1rem;">ECharts 集成调研</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">2. 数据流</td>
+      <td style="padding: 0.5rem 1rem;">上传/预览/导出 API</td>
+      <td style="padding: 0.5rem 1rem;">清洗逻辑+统计报告</td>
+      <td style="padding: 0.5rem 1rem;">Dashboard+Upload页</td>
+      <td style="padding: 0.5rem 1rem;">ChartPanel 基础组件</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">3. 核心功能</td>
+      <td style="padding: 0.5rem 1rem;">分析任务 API</td>
+      <td style="padding: 0.5rem 1rem;">K-Means+回归实现</td>
+      <td style="padding: 0.5rem 1rem;">Clean 页+DataTable</td>
+      <td style="padding: 0.5rem 1rem;">Analysis+Visualize页</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 0.5rem 1rem;">4. 图表系统</td>
+      <td style="padding: 0.5rem 1rem;">图表 JSON 数据 API</td>
+      <td style="padding: 0.5rem 1rem;">算法评估指标</td>
+      <td style="padding: 0.5rem 1rem;">History页+响应式</td>
+      <td style="padding: 0.5rem 1rem;">ChartConfig配置面板</td>
+    </tr>
+    <tr>
+      <td style="padding: 0.5rem 1rem;">5. 集成</td>
+      <td style="padding: 0.5rem 1rem;" colspan="2">后端联调+bug修复</td>
+      <td style="padding: 0.5rem 1rem;" colspan="2">前端联调+部署+报告</td>
+    </tr>
+  </table>
+</div>
+
+<p style="color: var(--accent); margin-top: 1.5rem;">4人分工是否合理？</p>
