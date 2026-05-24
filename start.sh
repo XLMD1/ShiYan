@@ -6,6 +6,9 @@ echo "Starting Django backend..."
 ./venv/bin/python backend/manage.py runserver 8000 &
 DJANGO_PID=$!
 
+echo "Waiting for backend to be ready..."
+sleep 3
+
 echo "Starting Vue frontend..."
 cd frontend && npm run dev &
 VUE_PID=$!
