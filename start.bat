@@ -5,6 +5,9 @@ echo === Start Data Analysis System ===
 echo Starting Django backend...
 start "Django-Backend" /D "%~dp0backend" "%~dp0venv\Scripts\python.exe" manage.py runserver 8000
 
+echo Waiting for backend to be ready...
+timeout /t 3 /nobreak >nul
+
 echo Starting Vue frontend...
 start "Vue-Frontend" /D "%~dp0frontend" npm run dev
 
