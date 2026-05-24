@@ -10,8 +10,11 @@ start "Vue-Frontend" /D "%~dp0frontend" npm run dev
 
 echo.
 echo ==============================
-echo   Backend:  http://localhost:8000
-echo   Frontend: http://localhost:5173
+echo   Frontend:   http://localhost:5173
+echo   Backend API: http://localhost:8000/api/
+echo   Admin:      http://localhost:8000/admin/
 echo ==============================
-echo   Open http://localhost:5173 in browser
+echo.
+echo Opening http://localhost:5173 ...
+start http://localhost:5173
 pause
