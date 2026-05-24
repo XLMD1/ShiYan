@@ -38,13 +38,10 @@
       </div>
 
       <div class="result-actions">
-        <button class="btn btn-primary" @click="loadPreview" :disabled="previewLoading">
-          {{ previewLoading ? '加载中...' : '查看数据预览' }}
-        </button>
+        <button class="btn btn-primary" @click="loadPreview">查看数据预览</button>
         <router-link to="/" class="btn btn-success">返回工作台</router-link>
         <router-link :to="`/clean/${currentDataset.id}`" class="btn btn-primary">去清洗数据</router-link>
       </div>
-      <p v-if="previewError" class="error">{{ previewError }}</p>
     </div>
 
     <div v-if="previewData" class="card">
@@ -56,7 +53,6 @@
         :page="previewData.page"
         :page-size="previewData.page_size"
         :total-pages="previewData.total_pages"
-        :loading="previewLoading"
         @page-change="(p) => loadPreview(p)"
       />
     </div>
@@ -75,8 +71,6 @@ const { uploading, currentDataset, previewData } = storeToRefs(store)
 
 const uploadProgress = ref(0)
 const uploadError = ref('')
-const previewLoading = ref(false)
-const previewError = ref('')
 
 async function handleUpload(file) {
   uploadError.value = ''
@@ -91,19 +85,31 @@ async function handleUpload(file) {
   }
 }
 
-async function loadPreview(page = 1) {
+async function loadPreview(pageOrEvent = 1) {
+  console.log('=== loadPreview 被调用了！===')
+  console.log('pageOrEvent:', pageOrEvent)
+  
+  // 如果是事件对象，用默认值 1
+  let page = 1
+  if (typeof pageOrEvent === 'number') {
+    page = pageOrEvent
+  }
+  
+  console.log('最终使用的 page:', page)
+  console.log('currentDataset.value:', currentDataset.value)
+  
   if (!currentDataset.value) {
-    previewError.value = '请先上传文件！'
+    console.log('没有 currentDataset！')
     return
   }
-  previewLoading.value = true
-  previewError.value = ''
+  
+  console.log('开始请求 previewDataset，id:', currentDataset.value.id)
   try {
-    await store.previewDataset(currentDataset.value.id, page)
+    const result = await store.previewDataset(currentDataset.value.id, page)
+    console.log('previewDataset 完成，结果:', result)
+    console.log('previewData.value 现在是:', previewData.value)
   } catch (e) {
-    previewError.value = e.response?.data?.error || '加载预览失败'
-  } finally {
-    previewLoading.value = false
+    console.error('previewDataset 出错了:', e)
   }
 }
 </script>
@@ -114,12 +120,6 @@ async function loadPreview(page = 1) {
 .section-title {
   font-size: 1.05rem;
   margin-bottom: 1rem;
-}
-
-.error {
-  color: var(--danger);
-  font-size: 0.85rem;
-  margin-top: 0.75rem;
 }
 
 .info-grid {
