@@ -11,8 +11,14 @@ cd frontend && npm run dev &
 VUE_PID=$!
 
 echo ""
-echo "  Backend:  http://localhost:8000"
-echo "  Frontend: http://localhost:5173"
+echo "=============================="
+echo "  Frontend:    http://localhost:5173"
+echo "  Backend API: http://localhost:8000/api/"
+echo "  Admin:       http://localhost:8000/admin/"
+echo "=============================="
+echo ""
+echo "Opening http://localhost:5173 ..."
+open http://localhost:5173 2>/dev/null || xdg-open http://localhost:5173 2>/dev/null || echo "Please open http://localhost:5173 manually"
 echo ""
 echo "Ctrl+C to stop both"
 
