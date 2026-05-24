@@ -72,12 +72,14 @@ class DatasetPreviewView(APIView):
             return Response({'error': '数据集不存在'}, status=status.HTTP_404_NOT_FOUND)
 
         try:
+            file_path = dataset.file.path
             if dataset.file_type == 'csv':
-                df = pd.read_csv(dataset.file.path)
+                df = pd.read_csv(file_path)
             else:
-                df = pd.read_excel(dataset.file.path)
-        except Exception:
-            return Response({'error': '文件读取失败'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                df = pd.read_excel(file_path)
+        except Exception as e:
+            error_msg = f'文件读取失败: {str(e)}'
+            return Response({'error': error_msg}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         page = int(request.query_params.get('page', 1))
         page_size = int(request.query_params.get('page_size', 100))
