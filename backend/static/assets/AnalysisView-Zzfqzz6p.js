@@ -1,0 +1,1 @@
+import{S as e,g as t,m as n,t as r}from"./index-EkTet0hP.js";var i={},a={class:`page`};function o(r,i){return e(),t(`div`,a,[...i[0]||=[n(`h2`,null,`分析任务`,-1),n(`p`,null,`此处由角色 C 实现`,-1)]])}var s=r(i,[[`render`,o]]);export{s as default};
