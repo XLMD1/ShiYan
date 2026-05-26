@@ -104,30 +104,14 @@ onMounted(() => {
 
 async function openPreview(id, page = 1) {
   currentPreviewId.value = id
-  showPreview.value = false
-  try {
-    await store.previewDataset(id, page)
-    const ds = datasets.value.find((d) => d.id === id)
-    if (ds) previewDatasetName.value = ds.name
-    showPreview.value = true
-  } catch (error) {
-    let errorMsg = '未知错误'
-    if (error.response?.data) {
-      errorMsg = typeof error.response.data === 'string' 
-        ? error.response.data 
-        : (error.response.data.error || JSON.stringify(error.response.data))
-    } else if (error.message) {
-      errorMsg = error.message
-    }
-    console.error('预览错误详情:', error)
-    console.error('错误响应:', error.response)
-    alert(`预览失败: ${errorMsg}`)
-  }
+  showPreview.value = true
+  await store.previewDataset(id, page)
+  const ds = datasets.value.find((d) => d.id === id)
+  if (ds) previewDatasetName.value = ds.name
 }
 
-
 function handleExport(id, fileType) {
-  const url = store.getExportUrl(id, fileType)
+  const url = store.getExportUrl(id, fileType === 'csv' ? 'csv' : 'xlsx')
   window.open(url, '_blank')
 }
 

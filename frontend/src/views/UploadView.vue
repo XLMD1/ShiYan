@@ -85,32 +85,9 @@ async function handleUpload(file) {
   }
 }
 
-async function loadPreview(pageOrEvent = 1) {
-  console.log('=== loadPreview 被调用了！===')
-  console.log('pageOrEvent:', pageOrEvent)
-  
-  // 如果是事件对象，用默认值 1
-  let page = 1
-  if (typeof pageOrEvent === 'number') {
-    page = pageOrEvent
-  }
-  
-  console.log('最终使用的 page:', page)
-  console.log('currentDataset.value:', currentDataset.value)
-  
-  if (!currentDataset.value) {
-    console.log('没有 currentDataset！')
-    return
-  }
-  
-  console.log('开始请求 previewDataset，id:', currentDataset.value.id)
-  try {
-    const result = await store.previewDataset(currentDataset.value.id, page)
-    console.log('previewDataset 完成，结果:', result)
-    console.log('previewData.value 现在是:', previewData.value)
-  } catch (e) {
-    console.error('previewDataset 出错了:', e)
-  }
+async function loadPreview(page = 1) {
+  if (!currentDataset.value) return
+  await store.previewDataset(currentDataset.value.id, page)
 }
 </script>
 
