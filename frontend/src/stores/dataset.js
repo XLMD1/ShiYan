@@ -46,20 +46,11 @@ export const useDatasetStore = defineStore('dataset', () => {
   }
 
   async function previewDataset(id, page = 1, pageSize = 100) {
-    loading.value = true
-    try {
-      const { data } = await api.get(`/datasets/${id}/preview/`, {
-        params: { page, page_size: pageSize },
-      })
-      previewData.value = data
-      return data
-    } catch (error) {
-      console.error('预览数据加载失败:', error)
-      previewData.value = null
-      throw error
-    } finally {
-      loading.value = false
-    }
+    const { data } = await api.get(`/datasets/${id}/preview/`, {
+      params: { page, page_size: pageSize },
+    })
+    previewData.value = data
+    return data
   }
 
   async function deleteDataset(id) {
@@ -67,9 +58,9 @@ export const useDatasetStore = defineStore('dataset', () => {
     datasets.value = datasets.value.filter((d) => d.id !== id)
   }
 
-  function getExportUrl(id, fileType = 'csv') {
+  function getExportUrl(id, format = 'csv') {
     const token = localStorage.getItem('access_token')
-    return `/api/datasets/${id}/export/?file_type=${fileType}&token=${token}`
+    return `/api/datasets/${id}/export/?format=${format}&token=${token}`
   }
 
   return {
