@@ -2,10 +2,12 @@ import os
 import pandas as pd
 from django.http import HttpResponse
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, RetrieveAPIView, DestroyAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Dataset
 from .serializers import DatasetSerializer, DatasetListSerializer
 
@@ -88,10 +90,13 @@ class DatasetPreviewView(APIView):
         start = (page - 1) * page_size
         end = start + page_size
         page_data = df.iloc[start:end]
+        
+        rows = page_data.values.tolist()
+        rows = [[None if pd.isna(cell) else cell for cell in row] for row in rows]
 
         return Response({
             'columns': list(df.columns),
-            'rows': page_data.values.tolist(),
+            'rows': rows,
             'total': total,
             'page': page,
             'page_size': page_size,
@@ -110,7 +115,25 @@ class DatasetDeleteView(DestroyAPIView):
         instance.delete()
 
 
+class URLTokenAuthentication(JWTAuthentication):
+    def authenticate(self, request):
+        result = super().authenticate(request)
+        if result is not None:
+            return result
+        token = request.query_params.get('token')
+        if not token:
+            return None
+        try:
+            validated_token = self.get_validated_token(token.encode('utf-8'))
+            user = self.get_user(validated_token)
+            return (user, validated_token)
+        except Exception:
+            return None
+
+
 class DatasetExportView(APIView):
+    authentication_classes = [URLTokenAuthentication]
+
     def get(self, request, pk):
         try:
             dataset = Dataset.objects.get(id=pk, user=request.user)
@@ -125,17 +148,18 @@ class DatasetExportView(APIView):
         except Exception:
             return Response({'error': '文件读取失败'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        format_type = request.query_params.get('format', 'csv')
+        format_type = request.query_params.get('file_type', 'csv')
+        base_name = os.path.splitext(dataset.name)[0]
 
         if format_type == 'xlsx':
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = f'attachment; filename="{dataset.name}.xlsx"'
+            response['Content-Disposition'] = f'attachment; filename="{base_name}.xlsx"'
             with pd.ExcelWriter(response, engine='openpyxl') as writer:
                 df.to_excel(writer, index=False)
             return response
         else:
             response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = f'attachment; filename="{dataset.name}.csv"'
+            response['Content-Disposition'] = f'attachment; filename="{base_name}.csv"'
             response.charset = 'utf-8-sig'
             df.to_csv(path_or_buf=response, index=False)
             return response
