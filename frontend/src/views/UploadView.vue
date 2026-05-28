@@ -14,8 +14,8 @@
         <button class="btn btn-primary" @click="doFetch('aqi')" :disabled="fetching">
           {{ fetching === 'aqi' ? '生成中...' : '空气质量模拟数据' }}
         </button>
-        <button id="btn-house" class="btn btn-primary" @click="doFetch('house')" :disabled="fetching">
-          {{ fetching === 'house' ? '抓取中...' : '武汉二手房(原生)' }}
+        <button id="btn-house" class="btn btn-primary" @click="() => { fetchMsg = '点到了'; }">
+          {{ fetching === 'house' ? '抓取中...' : '武汉二手房' }}
         </button>
       </div>
       <p class="fetch-hint">{{ fetchMsg }}</p>
