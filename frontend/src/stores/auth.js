@@ -4,7 +4,24 @@ import api from '../api'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
-  const isAuthenticated = ref(false)
+  const isAuthenticated = ref(!!localStorage.getItem('access_token'))
+  const initialized = ref(false)
+
+  async function init() {
+    if (initialized.value) return
+    initialized.value = true
+    const token = localStorage.getItem('access_token')
+    if (token) {
+      try {
+        const { data } = await api.get('/auth/me/')
+        user.value = data
+        isAuthenticated.value = true
+      } catch {
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+      }
+    }
+  }
 
   async function register(username, password, email) {
     const { data } = await api.post('/auth/register/', { username, password, email })
@@ -37,5 +54,5 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated.value = false
   }
 
-  return { user, isAuthenticated, register, login, fetchUser, logout }
+  return { user, isAuthenticated, initialized, init, register, login, fetchUser, logout }
 })

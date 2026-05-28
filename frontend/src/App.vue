@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavBar v-if="isLoggedIn" />
+    <NavBar v-if="isAuthenticated" />
     <main class="container">
       <router-view />
     </main>
@@ -8,10 +8,17 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { onMounted } from 'vue'
+import { useAuthStore } from './stores/auth'
+import { storeToRefs } from 'pinia'
 import NavBar from './components/NavBar.vue'
 
-const isLoggedIn = computed(() => !!localStorage.getItem('access_token'))
+const authStore = useAuthStore()
+const { isAuthenticated } = storeToRefs(authStore)
+
+onMounted(() => {
+  authStore.init()
+})
 </script>
 
 <style>

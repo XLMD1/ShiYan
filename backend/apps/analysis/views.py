@@ -71,7 +71,7 @@ class StatsView(APIView):
             return Response({'error': '数据集不存在'}, status=status.HTTP_404_NOT_FOUND)
 
         try:
-            df = _read_dataframe(dataset.file.path)
+            df = _read_dataframe(dataset.cleaned_file_path)
         except Exception as e:
             return Response({'error': f'读取文件失败: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -167,7 +167,7 @@ class KMeansView(APIView):
             return Response({'error': 'K 值必须在 2~10 之间'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            result = run_kmeans(dataset.file.path, features, k)
+            result = run_kmeans(dataset.cleaned_file_path, features, k)
         except ValueError as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
@@ -215,7 +215,7 @@ class RegressionView(APIView):
             return Response({'error': '请选择因变量 Y'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            result = run_regression(dataset.file.path, x_columns, y_column)
+            result = run_regression(dataset.cleaned_file_path, x_columns, y_column)
         except ValueError as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
