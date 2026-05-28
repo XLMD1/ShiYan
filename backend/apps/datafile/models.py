@@ -1,3 +1,4 @@
+import os
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -22,3 +23,13 @@ class Dataset(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def cleaned_file_path(self):
+        """Return the cleaned file path if it exists, otherwise the original."""
+        if self.is_cleaned:
+            base, ext = os.path.splitext(self.file.path)
+            cleaned_path = f'{base}_cleaned{ext}'
+            if os.path.exists(cleaned_path):
+                return cleaned_path
+        return self.file.path

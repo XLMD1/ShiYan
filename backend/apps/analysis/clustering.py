@@ -71,6 +71,13 @@ def run_kmeans(file_path, features, k):
     for i in range(k):
         cluster_sizes[f'cluster_{i}'] = int((labels == i).sum())
 
+    # 将聚类中心转为前端友好的数组格式（每个簇一个坐标数组）
+    centers_array = [
+        [round(float(centers_unscaled[i][j]), 4) for j in range(len(features))]
+        for i in range(k)
+    ]
+    sizes_array = [cluster_sizes[f'cluster_{i}'] for i in range(k)]
+
     return {
         'cluster_labels': labels.astype(int).tolist(),
         'cluster_centers': {
@@ -81,7 +88,11 @@ def run_kmeans(file_path, features, k):
             for i in range(k)
         },
         'cluster_sizes': cluster_sizes,
-        'result_data': result_records,
+        'result_data': {
+            'records': result_records,
+            'centers': centers_array,
+            'sizes': sizes_array,
+        },
         'metrics': {
             'inertia': round(float(kmeans.inertia_), 4),
             'silhouette_score': current_silhouette,

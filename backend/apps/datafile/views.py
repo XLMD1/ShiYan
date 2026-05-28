@@ -150,6 +150,8 @@ class DatasetExportView(APIView):
 
         format_type = request.query_params.get('file_type', 'csv')
         base_name = os.path.splitext(dataset.name)[0]
+        if dataset.is_cleaned:
+            base_name = f'{base_name}_cleaned'
 
         if format_type == 'xlsx':
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
