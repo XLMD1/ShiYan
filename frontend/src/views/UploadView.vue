@@ -30,7 +30,7 @@
       />
     </div>
 
-    <div v-if="currentDataset" class="card upload-result">
+    <div v-if="currentDataset" ref="resultCard" class="card upload-result">
       <h3 class="section-title">上传成功</h3>
       <div class="info-grid">
         <div class="info-item">
@@ -88,6 +88,7 @@ import DataTable from '../components/DataTable.vue'
 const store = useDatasetStore()
 const { uploading, currentDataset, previewData } = storeToRefs(store)
 
+const resultCard = ref(null)
 const uploadProgress = ref(0)
 const uploadError = ref('')
 
@@ -120,7 +121,7 @@ async function doFetch(source) {
     await store.fetchData(source)
     fetchMsg.value = '数据抓取成功！'
     await nextTick()
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+    resultCard.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   } catch (e) {
     fetchMsg.value = e.response?.data?.error || '抓取失败'
   } finally {
