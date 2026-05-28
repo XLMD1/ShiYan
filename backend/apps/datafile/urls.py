@@ -8,4 +8,5 @@ urlpatterns = [
     path('<int:pk>/preview/', views.DatasetPreviewView.as_view(), name='dataset_preview'),
     path('<int:pk>/delete/', views.DatasetDeleteView.as_view(), name='dataset_delete'),
     path('<int:pk>/export/', views.DatasetExportView.as_view(), name='dataset_export'),
+    path('fetch/', views.DataFetchView.as_view(), name='data_fetch'),
 ]

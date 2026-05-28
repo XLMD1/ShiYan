@@ -63,6 +63,12 @@ export const useDatasetStore = defineStore('dataset', () => {
     return `/api/datasets/${id}/export/?file_type=${format}&token=${token}`
   }
 
+  async function fetchData(source) {
+    const { data } = await api.post('/datasets/fetch/', { source })
+    currentDataset.value = data
+    return data
+  }
+
   return {
     datasets,
     currentDataset,
@@ -75,5 +81,6 @@ export const useDatasetStore = defineStore('dataset', () => {
     previewDataset,
     deleteDataset,
     getExportUrl,
+    fetchData,
   }
 })

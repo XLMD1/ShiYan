@@ -163,3 +163,76 @@ class DatasetExportView(APIView):
             response.charset = 'utf-8-sig'
             df.to_csv(path_or_buf=response, index=False)
             return response
+
+
+class DataFetchView(APIView):
+    """一键抓取在线数据"""
+
+    SOURCE_MAP = {
+        'douban': {
+            'module': 'spider_douban',
+            'function': 'scrape_douban',
+            'output': 'douban_movies.csv',
+            'label': '豆瓣电影 Top250',
+        },
+        'bilibili': {
+            'module': 'spider_bilibili',
+            'function': 'scrape_bilibili',
+            'output': 'bilibili_hot.csv',
+            'label': 'B站热门视频',
+        },
+        'aqi': {
+            'module': 'spider_aqi',
+            'function': 'generate_synthetic_aqi',
+            'output': 'simulated_aqi_weather.csv',
+            'label': '空气质量模拟数据',
+        },
+        'house': {
+            'module': 'spider_house',
+            'function': 'scrape_wuhan_lianjia',
+            'output': 'wuhan_houses.csv',
+            'label': '武汉二手房',
+        },
+    }
+
+    def post(self, request):
+        source = request.data.get('source')
+        if not source or source not in self.SOURCE_MAP:
+            return Response({'error': f'不支持的数据源，可选: {list(self.SOURCE_MAP.keys())}'}, status=400)
+
+        info = self.SOURCE_MAP[source]
+        import importlib, sys
+
+        scripts_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'scripts')
+        sys.path.insert(0, scripts_dir)
+
+        try:
+            mod = importlib.import_module(info['module'])
+            func = getattr(mod, info['function'])
+            func()
+        except Exception as e:
+            return Response({'error': f'抓取失败: {str(e)}'}, status=500)
+        finally:
+            sys.path.remove(scripts_dir)
+
+        csv_path = os.path.join(scripts_dir, info['output'])
+        if not os.path.exists(csv_path):
+            return Response({'error': f'抓取完成但未找到输出文件 {info["output"]}'}, status=500)
+
+        try:
+            df = pd.read_csv(csv_path)
+        except Exception as e:
+            return Response({'error': f'读取抓取结果失败: {str(e)}'}, status=500)
+
+        from django.core.files import File
+        dataset = Dataset.objects.create(
+            user=request.user,
+            name=info['output'],
+            file_type='csv',
+            rows=len(df),
+            columns=list(df.columns),
+        )
+        with open(csv_path, 'rb') as f:
+            dataset.file.save(info['output'], File(f), save=True)
+
+        return Response(DatasetSerializer(dataset).data, status=201)

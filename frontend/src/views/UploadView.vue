@@ -3,6 +3,25 @@
     <h2>上传数据</h2>
 
     <div class="card">
+      <h3 class="section-title">一键抓取在线数据</h3>
+      <div class="fetch-buttons">
+        <button class="btn btn-primary" @click="doFetch('douban')" :disabled="fetching">
+          {{ fetching === 'douban' ? '抓取中...' : '豆瓣电影 Top250' }}
+        </button>
+        <button class="btn btn-primary" @click="doFetch('bilibili')" :disabled="fetching">
+          {{ fetching === 'bilibili' ? '抓取中...' : 'B站热门视频' }}
+        </button>
+        <button class="btn btn-primary" @click="doFetch('aqi')" :disabled="fetching">
+          {{ fetching === 'aqi' ? '生成中...' : '空气质量模拟数据' }}
+        </button>
+        <button class="btn btn-primary" @click="doFetch('house')" :disabled="fetching">
+          {{ fetching === 'house' ? '抓取中...' : '武汉二手房' }}
+        </button>
+      </div>
+      <p class="fetch-hint">{{ fetchMsg }}</p>
+    </div>
+
+    <div class="card">
       <FileUploader
         :uploading="uploading"
         :progress="uploadProgress"
@@ -89,6 +108,23 @@ async function loadPreview(page = 1) {
   if (!currentDataset.value) return
   await store.previewDataset(currentDataset.value.id, page)
 }
+
+const fetching = ref('')
+const fetchMsg = ref('')
+
+async function doFetch(source) {
+  fetching.value = source
+  fetchMsg.value = ''
+  uploadError.value = ''
+  try {
+    await store.fetchData(source)
+    fetchMsg.value = `${source} 数据抓取成功，已在下方展示`
+  } catch (e) {
+    fetchMsg.value = e.response?.data?.error || '抓取失败'
+  } finally {
+    fetching.value = ''
+  }
+}
 </script>
 
 <style scoped>
@@ -148,5 +184,16 @@ async function loadPreview(page = 1) {
 .result-actions .btn {
   text-decoration: none;
   display: inline-block;
+}
+
+.fetch-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.fetch-hint {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 </style>
