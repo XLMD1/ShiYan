@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <h2>上传数据</h2>
+    <h2>上传数据 V2</h2>
 
     <div class="card">
       <h3 class="section-title">一键抓取在线数据</h3>
@@ -14,8 +14,8 @@
         <button class="btn btn-primary" @click="doFetch('aqi')" :disabled="fetching">
           {{ fetching === 'aqi' ? '生成中...' : '空气质量模拟数据' }}
         </button>
-        <button class="btn btn-primary" @click="doFetch('house')" :disabled="fetching">
-          {{ fetching === 'house' ? '抓取中...' : '武汉二手房' }}
+        <button id="btn-house" class="btn btn-primary" @click="doFetch('house')" :disabled="fetching">
+          {{ fetching === 'house' ? '抓取中...' : '武汉二手房(原生)' }}
         </button>
       </div>
       <p class="fetch-hint">{{ fetchMsg }}</p>
