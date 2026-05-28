@@ -168,34 +168,68 @@ function buildRegressionData(result, metrics, chartType) {
 }
 
 function buildKMeansData(result, metrics, chartType) {
-  const sizes = result.cluster_sizes || []
-  const centers = result.centers || []
+  // result 可能是新格式 (object: {records, centers, sizes}) 或旧格式 (array: records)
+  const isArray = Array.isArray(result)
+  const records = isArray ? result : (result.records || [])
+  const centers = isArray ? [] : (result.centers || [])
+  const sizes = isArray ? computeClusterSizes(records) : (result.sizes || [])
 
   if (chartType === 'scatter') {
+    if (centers.length === 0) {
+      throw new Error('无法生成散点图：缺少聚类中心数据，请重新运行 K-Means 分析')
+    }
     return {
-      points: centers.map((center, index) => [
-        Number(center[0] ?? index),
-        Number(center[1] ?? center[0] ?? 0),
+      points: centers.map((center) => [
+        Number(center[0] ?? 0),
+        Number(center.length > 1 ? center[1] : (center[0] ?? 0)),
       ]),
     }
   }
   if (chartType === 'pie') {
+    if (sizes.length === 0) {
+      throw new Error('无法生成饼图：缺少聚类大小数据，请重新运行 K-Means 分析')
+    }
     return { items: sizes.map((value, index) => ({ name: `Cluster ${index + 1}`, value })) }
   }
-  if (chartType === 'line' && Array.isArray(metrics.elbow)) {
-    return { values: metrics.elbow.map((item) => item.inertia) }
+  if (chartType === 'line') {
+    const elbow = metrics.elbow_data
+    if (elbow && elbow.k_values && elbow.inertias) {
+      return { values: elbow.inertias, labels: elbow.k_values }
+    }
+    if (sizes.length > 0) {
+      return { values: sizes, labels: sizes.map((_, i) => i) }
+    }
+    throw new Error('无法生成折线图：缺少肘部数据，请重新运行 K-Means 分析')
   }
   if (chartType === 'heatmap') {
+    if (centers.length === 0) {
+      throw new Error('无法生成热力图：缺少聚类中心数据，请重新运行 K-Means 分析')
+    }
     return {
-      matrix: centers.flatMap((center, rowIndex) => (
+      matrix: centers.flatMap((center, rowIndex) =>
         center.map((value, colIndex) => [colIndex, rowIndex, value])
-      )),
+      ),
     }
   }
   if (chartType === 'boxplot') {
+    if (sizes.length === 0) {
+      throw new Error('无法生成箱线图：缺少聚类大小数据，请重新运行 K-Means 分析')
+    }
     return { box_data: [boxStats(sizes)] }
   }
+  // 默认柱状图
+  if (sizes.length === 0) {
+    throw new Error('无法生成柱状图：缺少聚类大小数据，请重新运行 K-Means 分析')
+  }
   return { labels: sizes.map((_, index) => `Cluster ${index + 1}`), values: sizes }
+}
+
+function computeClusterSizes(records) {
+  if (!records || records.length === 0) return []
+  const maxCluster = Math.max(...records.map((r) => r.cluster ?? 0), 0)
+  const sizes = new Array(maxCluster + 1).fill(0)
+  records.forEach((r) => { sizes[r.cluster ?? 0]++ })
+  return sizes
 }
 
 function buildGenericData(result, metrics, chartType) {

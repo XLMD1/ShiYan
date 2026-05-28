@@ -43,7 +43,11 @@ def _build_scatter(data, title, x_column, y_column, color):
 
 def _build_line(data, title, x_column, y_column, color):
     values = data.get('values', [])
-    series_data = [[i, v] for i, v in enumerate(values)]
+    labels = data.get('labels', [])
+    if labels and len(labels) == len(values):
+        series_data = [[labels[i], v] for i, v in enumerate(values)]
+    else:
+        series_data = [[i, v] for i, v in enumerate(values)]
     return {
         'title': {'text': title, 'left': 'center'},
         'xAxis': {'name': x_column, 'type': 'value'},
