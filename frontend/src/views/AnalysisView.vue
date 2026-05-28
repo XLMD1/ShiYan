@@ -263,6 +263,7 @@ const route = useRoute()
 const datasetStore = useDatasetStore()
 
 const dataset = ref(null)
+const stats = ref(null)
 const algorithm = ref('kmeans')
 const running = ref(false)
 const loading = ref(true)
@@ -273,17 +274,18 @@ const kmeansParams = ref({ features: [], k: 3 })
 const regressionParams = ref({ x_columns: [], y_column: null })
 
 const numericColumns = computed(() => {
-  if (!dataset.value?.columns) return []
-  return dataset.value.columns.filter(c => {
-    // 简单启发式：不含常见非数值列名
-    return c !== 'id' && c !== 'ID' && c !== 'CustomerID'
-  })
+  if (!stats.value?.columns) return []
+  return stats.value.columns
+    .filter(c => c.type === 'numeric')
+    .map(c => c.name)
 })
 
 onMounted(async () => {
   const id = route.params.id
   try {
     dataset.value = await datasetStore.fetchDataset(id)
+    const res = await api.get(`/analysis/stats/${id}/`)
+    stats.value = res.data
   } catch {
     error.value = '加载数据集失败'
   } finally {
