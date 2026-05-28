@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useDatasetStore } from '../stores/dataset'
 import { storeToRefs } from 'pinia'
 import FileUploader from '../components/FileUploader.vue'
@@ -119,6 +119,7 @@ async function doFetch(source) {
   try {
     await store.fetchData(source)
     fetchMsg.value = '数据抓取成功！'
+    await nextTick()
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
   } catch (e) {
     fetchMsg.value = e.response?.data?.error || '抓取失败'
