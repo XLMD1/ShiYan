@@ -5,13 +5,13 @@
     <div class="card">
       <h3 class="section-title">一键抓取在线数据</h3>
       <div class="fetch-buttons">
-        <button class="btn btn-primary" @click="doFetch('douban')" :disabled="fetching">
+        <button class="btn btn-primary" @click="doFetch('douban')" :disabled="!!fetching">
           {{ fetching === 'douban' ? '抓取中...' : '豆瓣电影 Top250' }}
         </button>
-        <button class="btn btn-primary" @click="doFetch('bilibili')" :disabled="fetching">
+        <button class="btn btn-primary" @click="doFetch('bilibili')" :disabled="!!fetching">
           {{ fetching === 'bilibili' ? '抓取中...' : 'B站热门视频' }}
         </button>
-        <button class="btn btn-primary" @click="doFetch('aqi')" :disabled="fetching">
+        <button class="btn btn-primary" @click="doFetch('aqi')" :disabled="!!fetching">
           {{ fetching === 'aqi' ? '生成中...' : '空气质量模拟数据' }}
         </button>
         <button class="btn btn-primary" @click="doFetch('house')" :disabled="!!fetching">
