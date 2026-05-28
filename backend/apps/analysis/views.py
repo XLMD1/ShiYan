@@ -173,13 +173,27 @@ class KMeansView(APIView):
         except Exception as e:
             return Response({'error': f'K-Means 聚类失败: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+        # 存储前端 buildChartData() 需要的 chart 数据格式
         task = AnalysisTask.objects.create(
             user=request.user,
             dataset=dataset,
             task_type='kmeans',
             parameters={'features': features, 'k': k},
-            result_data=result.get('result_data', []),
-            metrics=result.get('metrics', {}),
+            result_data={
+                'cluster_sizes': list(result['cluster_sizes'].values()),
+                'centers': [list(center.values()) for center in result['cluster_centers'].values()],
+                'labels': result.get('cluster_labels', []),
+            },
+            metrics={
+                **result.get('metrics', {}),
+                'elbow': [
+                    {'k': kv, 'inertia': iv}
+                    for kv, iv in zip(
+                        result['metrics'].get('elbow_data', {}).get('k_values', []),
+                        result['metrics'].get('elbow_data', {}).get('inertias', [])
+                    )
+                ],
+            },
             status='done',
         )
 
@@ -221,12 +235,22 @@ class RegressionView(APIView):
         except Exception as e:
             return Response({'error': f'线性回归失败: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+        # 构建前端 buildRegressionData() 需要的 actual_vs_predicted 格式
+        predictions = result.get('result_data', [])
+        actual_vs_predicted = [
+            {'actual': row[y_column], 'predicted': row['predicted']}
+            for row in predictions if y_column in row
+        ]
         task = AnalysisTask.objects.create(
             user=request.user,
             dataset=dataset,
             task_type='regression',
             parameters={'x_columns': x_columns, 'y_column': y_column},
-            result_data=result.get('result_data', []),
+            result_data={
+                'actual_vs_predicted': actual_vs_predicted,
+                'r2_score': result['metrics']['r2_score'],
+                'rmse': result['metrics']['rmse'],
+            },
             metrics=result.get('metrics', {}),
             status='done',
         )
