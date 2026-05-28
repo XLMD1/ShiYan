@@ -119,6 +119,7 @@ async function doFetch(source) {
   uploadError.value = ''
   try {
     await store.fetchData(source)
+    console.log('fetchData success, currentDataset:', store.currentDataset)
     fetchMsg.value = '数据抓取成功！'
     await nextTick()
     resultCard.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
