@@ -60,7 +60,7 @@ export const useDatasetStore = defineStore('dataset', () => {
 
   function getExportUrl(id, format = 'csv') {
     const token = localStorage.getItem('access_token')
-    return `/api/datasets/${id}/export/?format=${format}&token=${token}`
+    return `/api/datasets/${id}/export/?file_type=${format}&token=${token}`
   }
 
   return {
