@@ -118,7 +118,8 @@ async function doFetch(source) {
   uploadError.value = ''
   try {
     await store.fetchData(source)
-    fetchMsg.value = `${source} 数据抓取成功，已在下方展示`
+    fetchMsg.value = '数据抓取成功！'
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
   } catch (e) {
     fetchMsg.value = e.response?.data?.error || '抓取失败'
   } finally {
