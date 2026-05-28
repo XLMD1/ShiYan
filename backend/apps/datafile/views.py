@@ -141,10 +141,11 @@ class DatasetExportView(APIView):
             return Response({'error': '数据集不存在'}, status=status.HTTP_404_NOT_FOUND)
 
         try:
+            file_path = dataset.cleaned_file_path
             if dataset.file_type == 'csv':
-                df = pd.read_csv(dataset.file.path)
+                df = pd.read_csv(file_path)
             else:
-                df = pd.read_excel(dataset.file.path)
+                df = pd.read_excel(file_path)
         except Exception:
             return Response({'error': '文件读取失败'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
