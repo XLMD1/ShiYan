@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <h2>上传数据 V2</h2>
+    <h2>上传数据</h2>
 
     <div class="card">
       <h3 class="section-title">一键抓取在线数据</h3>
@@ -14,7 +14,7 @@
         <button class="btn btn-primary" @click="doFetch('aqi')" :disabled="fetching">
           {{ fetching === 'aqi' ? '生成中...' : '空气质量模拟数据' }}
         </button>
-        <button id="btn-house" class="btn btn-primary" @click="doFetch('house')">
+        <button class="btn btn-primary" @click="doFetch('house')" :disabled="!!fetching">
           {{ fetching === 'house' ? '抓取中...' : '武汉二手房' }}
         </button>
       </div>
@@ -114,14 +114,17 @@ const fetching = ref('')
 const fetchMsg = ref('')
 
 async function doFetch(source) {
-  fetchMsg.value = 'doFetch被调用了! source=' + source
+  fetching.value = source
+  fetchMsg.value = '正在抓取数据...'
   try {
     await store.fetchData(source)
     fetchMsg.value = '数据抓取成功！'
     await nextTick()
     resultCard.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   } catch (e) {
-    fetchMsg.value = '错误: ' + (e.response?.data?.error || e.message || '未知')
+    fetchMsg.value = e.response?.data?.error || e.message || '抓取失败'
+  } finally {
+    fetching.value = ''
   }
 }
 </script>
