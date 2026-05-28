@@ -14,7 +14,7 @@
         <button class="btn btn-primary" @click="doFetch('aqi')" :disabled="fetching">
           {{ fetching === 'aqi' ? '生成中...' : '空气质量模拟数据' }}
         </button>
-        <button id="btn-house" class="btn btn-primary" @click="() => { fetchMsg = '点到了'; }">
+        <button id="btn-house" class="btn btn-primary" @click="doFetch('house')">
           {{ fetching === 'house' ? '抓取中...' : '武汉二手房' }}
         </button>
       </div>
@@ -114,19 +114,14 @@ const fetching = ref('')
 const fetchMsg = ref('')
 
 async function doFetch(source) {
-  fetching.value = source
-  fetchMsg.value = '正在抓取数据...'
-  uploadError.value = ''
+  fetchMsg.value = 'doFetch被调用了! source=' + source
   try {
     await store.fetchData(source)
-    console.log('fetchData success, currentDataset:', store.currentDataset)
     fetchMsg.value = '数据抓取成功！'
     await nextTick()
     resultCard.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   } catch (e) {
-    fetchMsg.value = e.response?.data?.error || '抓取失败'
-  } finally {
-    fetching.value = ''
+    fetchMsg.value = '错误: ' + (e.response?.data?.error || e.message || '未知')
   }
 }
 </script>
