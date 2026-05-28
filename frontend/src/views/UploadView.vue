@@ -115,7 +115,7 @@ const fetchMsg = ref('')
 
 async function doFetch(source) {
   fetching.value = source
-  fetchMsg.value = ''
+  fetchMsg.value = '正在抓取数据...'
   uploadError.value = ''
   try {
     await store.fetchData(source)
