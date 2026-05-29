@@ -31,6 +31,7 @@
           <tr>
             <th>名称</th>
             <th>类型</th>
+            <th>大小</th>
             <th>行数</th>
             <th>列数</th>
             <th>状态</th>
@@ -44,6 +45,7 @@
             <td>
               <span class="type-badge" :class="ds.file_type">{{ ds.file_type.toUpperCase() }}</span>
             </td>
+            <td class="size-cell">{{ ds.file_size || '-' }}</td>
             <td>{{ ds.rows.toLocaleString() }}</td>
             <td>{{ (ds.columns || []).length }}</td>
             <td>
@@ -211,6 +213,12 @@ function formatDate(dateStr) {
 .status-badge.cleaned { background: #e8f5e9; color: #2e7d32; }
 
 .time-cell {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.size-cell {
   font-size: 0.8rem;
   color: var(--text-muted);
   white-space: nowrap;

@@ -74,7 +74,7 @@ class DatasetPreviewView(APIView):
             return Response({'error': '数据集不存在'}, status=status.HTTP_404_NOT_FOUND)
 
         try:
-            file_path = dataset.file.path
+            file_path = dataset.cleaned_file_path
             if dataset.file_type == 'csv':
                 df = pd.read_csv(file_path)
             else:
@@ -101,6 +101,7 @@ class DatasetPreviewView(APIView):
             'page': page,
             'page_size': page_size,
             'total_pages': (total + page_size - 1) // page_size,
+            'is_cleaned': dataset.is_cleaned,
         })
 
 

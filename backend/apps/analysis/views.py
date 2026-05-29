@@ -120,7 +120,6 @@ class CleanView(APIView):
         except Exception as e:
             return Response({'error': f'清洗失败: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # 保存清洗后的文件（覆盖原文件或新建文件）
         original_path = dataset.file.path
         base, ext = os.path.splitext(original_path)
         cleaned_path = f'{base}_cleaned{ext}'
@@ -130,7 +129,6 @@ class CleanView(APIView):
         else:
             cleaned_df.to_excel(cleaned_path, index=False)
 
-        # 更新数据集记录
         dataset.is_cleaned = True
         dataset.rows = len(cleaned_df)
         dataset.save(update_fields=['is_cleaned', 'rows'])
@@ -140,6 +138,46 @@ class CleanView(APIView):
             'rows': len(cleaned_df),
             'columns': list(cleaned_df.columns),
             'is_cleaned': True,
+        })
+
+
+class ResetView(APIView):
+    """重置数据集到原始状态"""
+
+    def post(self, request, dataset_id):
+        import pandas as pd
+        from apps.datafile.serializers import DatasetSerializer
+
+        dataset = _get_dataset_or_404(request.user, dataset_id)
+        if dataset is None:
+            return Response({'error': '数据集不存在'}, status=status.HTTP_404_NOT_FOUND)
+
+        if not dataset.is_cleaned:
+            return Response({'error': '数据集尚未清洗，无需重置'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            df = _read_dataframe(dataset.file.path)
+        except Exception as e:
+            return Response({'error': f'读取原文件失败: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        base, ext = os.path.splitext(dataset.file.path)
+        cleaned_path = f'{base}_cleaned{ext}'
+        if os.path.exists(cleaned_path):
+            try:
+                os.remove(cleaned_path)
+            except Exception:
+                pass
+
+        dataset.is_cleaned = False
+        dataset.rows = len(df)
+        dataset.columns = list(df.columns)
+        dataset.save(update_fields=['is_cleaned', 'rows', 'columns'])
+
+        serializer = DatasetSerializer(dataset)
+
+        return Response({
+            'message': '已重置到原始文件',
+            'dataset': serializer.data,
         })
 
 

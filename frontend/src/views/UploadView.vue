@@ -30,41 +30,48 @@
       />
     </div>
 
-    <div v-if="currentDataset" ref="resultCard" class="card upload-result">
+    <div v-if="uploadedDataset" ref="resultCard" class="card upload-result">
       <h3 class="section-title">上传成功</h3>
       <div class="info-grid">
         <div class="info-item">
           <span class="info-label">文件名</span>
-          <span class="info-value">{{ currentDataset.name }}</span>
+          <span class="info-value">{{ uploadedDataset.name }}</span>
         </div>
         <div class="info-item">
           <span class="info-label">文件类型</span>
-          <span class="info-value">{{ currentDataset.file_type.toUpperCase() }}</span>
+          <span class="info-value">{{ uploadedDataset.file_type.toUpperCase() }}</span>
         </div>
         <div class="info-item">
           <span class="info-label">数据行数</span>
-          <span class="info-value">{{ currentDataset.rows.toLocaleString() }}</span>
+          <span class="info-value">{{ uploadedDataset.rows.toLocaleString() }}</span>
         </div>
         <div class="info-item">
           <span class="info-label">列数</span>
-          <span class="info-value">{{ (currentDataset.columns || []).length }}</span>
+          <span class="info-value">{{ (uploadedDataset.columns || []).length }}</span>
+        </div>
+        <div class="info-item" v-if="uploadedDataset.file_size">
+          <span class="info-label">文件大小</span>
+          <span class="info-value">{{ uploadedDataset.file_size }}</span>
         </div>
       </div>
 
-      <div class="column-list" v-if="currentDataset.columns && currentDataset.columns.length">
+      <div class="column-list" v-if="uploadedDataset.columns && uploadedDataset.columns.length">
         <span class="info-label">字段列表：</span>
-        <span v-for="col in currentDataset.columns" :key="col" class="col-tag">{{ col }}</span>
+        <span v-for="col in uploadedDataset.columns" :key="col" class="col-tag">{{ col }}</span>
       </div>
 
       <div class="result-actions">
-        <button class="btn btn-primary" @click="loadPreview">查看数据预览</button>
+        <button class="btn btn-primary" @click="openPreview(uploadedDataset.id)">查看数据预览</button>
         <router-link to="/" class="btn btn-success">返回工作台</router-link>
-        <router-link :to="`/clean/${currentDataset.id}`" class="btn btn-primary">去清洗数据</router-link>
+        <router-link :to="`/clean/${uploadedDataset.id}`" class="btn btn-primary">去清洗数据</router-link>
       </div>
     </div>
 
-    <div v-if="previewData" class="card">
-      <h3 class="section-title">数据预览</h3>
+    <div v-if="showPreview && previewData" class="card preview-card">
+      <div class="preview-header">
+        <h3 class="section-title">数据预览</h3>
+        <button class="btn-close" @click="showPreview = false">关闭预览</button>
+      </div>
       <DataTable
         :columns="previewData.columns"
         :rows="previewData.rows"
@@ -72,7 +79,7 @@
         :page="previewData.page"
         :page-size="previewData.page_size"
         :total-pages="previewData.total_pages"
-        @page-change="(p) => loadPreview(p)"
+        @page-change="(p) => openPreview(uploadedDataset.id, p)"
       />
     </div>
   </div>
@@ -86,28 +93,34 @@ import FileUploader from '../components/FileUploader.vue'
 import DataTable from '../components/DataTable.vue'
 
 const store = useDatasetStore()
-const { uploading, currentDataset, previewData } = storeToRefs(store)
+const { uploading, previewData } = storeToRefs(store)
 
 const resultCard = ref(null)
 const uploadProgress = ref(0)
 const uploadError = ref('')
+const uploadedDataset = ref(null)
+const showPreview = ref(false)
 
 async function handleUpload(file) {
   uploadError.value = ''
+  showPreview.value = false
   uploadProgress.value = 0
   try {
-    await store.uploadFile(file, (progress) => {
+    const data = await store.uploadFile(file, (progress) => {
       uploadProgress.value = progress
     })
+    uploadedDataset.value = data
+    await nextTick()
+    resultCard.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   } catch (e) {
     const msg = e.response?.data?.error || '上传失败，请重试'
     uploadError.value = msg
   }
 }
 
-async function loadPreview(page = 1) {
-  if (!currentDataset.value) return
-  await store.previewDataset(currentDataset.value.id, page)
+async function openPreview(id, page = 1) {
+  showPreview.value = true
+  await store.previewDataset(id, page)
 }
 
 const fetching = ref('')
@@ -117,7 +130,8 @@ async function doFetch(source) {
   fetching.value = source
   fetchMsg.value = '正在抓取数据...'
   try {
-    await store.fetchData(source)
+    const data = await store.fetchData(source)
+    uploadedDataset.value = data
     fetchMsg.value = '数据抓取成功！'
     await nextTick()
     resultCard.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -139,7 +153,7 @@ async function doFetch(source) {
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1rem;
   margin-bottom: 1rem;
 }
@@ -198,4 +212,25 @@ async function doFetch(source) {
   font-size: 0.85rem;
   color: var(--text-muted);
 }
+
+.preview-card {
+  margin-top: 1rem;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-close {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--card-bg);
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.btn-close:hover { background: #f0f0f0; }
 </style>
