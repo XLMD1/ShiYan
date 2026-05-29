@@ -5,8 +5,8 @@ import numpy as np
 
 
 def scrape_wuhan_lianjia():
-    print("开始抓取 武汉链家二手房 核心数据 (国内直连 DOM 结构解析)...")
-    # 精准定位于武汉站域名：wh.lianjia.com
+    print("开始抓取武汉链家二手房核心数据...")
+    # 定位武汉站域名
     url = 'https://wh.lianjia.com/ershoufang/'
 
     headers = {
@@ -24,16 +24,16 @@ def scrape_wuhan_lianjia():
         for item in soup.find_all('div', class_='info clear')[:30]:
             title = item.find('div', class_='title').a.text.strip()
 
-            # 1. 提取总价 (万)
+            # 提取总价
             total_price = float(item.find('div', class_='totalPrice').span.text)
 
-            # 2. 提取单价 (元/平米) 并清洗掉千分位逗号和文字
+            # 提取单价并清洗掉千分位逗号和文字
             unit_price_str = item.find('div', class_='unitPrice').span.text
             unit_price_clean = unit_price_str.replace('单价', '').replace('元/平米', '').replace('元/平', '').replace(
                 ',', '').strip()
             unit_price = float(unit_price_clean)
 
-            # 3. 核心算法支撑：根据总价和单价，精确推算出该套房源的【建筑面积】
+            # 根据总价和单价，算出该套房源建筑面积
             area = round(total_price * 10000 / unit_price, 2)
 
             houses.append({
@@ -45,8 +45,7 @@ def scrape_wuhan_lianjia():
 
         df = pd.DataFrame(houses)
 
-        # 故意制造 2 处缺失值 (NaN)
-        # 这样队友在运行他的 detect_missing 和 handle_missing 时，能完美检测出武汉房产数据的缺失并进行均值填补！
+        # 制造2处缺失值NaN
         df.loc[3, '建筑面积(平米)'] = np.nan
         df.loc[7, '单价(元/平米)'] = np.nan
 
