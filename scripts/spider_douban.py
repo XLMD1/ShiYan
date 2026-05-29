@@ -7,7 +7,7 @@ import re
 
 
 def scrape_douban():
-    print("开始抓取 豆瓣电影 Top250 数据 (最终暴力破解版)...")
+    print("开始抓取豆瓣电影Top250数据...")
     url = 'https://movie.douban.com/top250'
 
     bid = ''.join(random.sample('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 11))
@@ -35,13 +35,13 @@ def scrape_douban():
                 title = item.find('span', class_='title').text
                 rating = float(item.find('span', class_='rating_num').text)
 
-                # 降维打击：提取整块HTML里的所有纯文本，无视任何标签层级
+                # 提取整块HTML里的所有纯文本
                 item_text = item.get_text()
 
-                # 暴力扫描：寻找连续的数字(\d+)，后面跟着任意数量的空格(\s*)，再跟着"人评价"
+                # 寻找连续的数字，后面跟着任意数量的空格
                 match = re.search(r'(\d+)\s*人评价', item_text)
 
-                # 如果找到了，就提取数字部分；没找到再用 0 兜底
+                # 找到就提取数字部分，没找到就记为0
                 votes = int(match.group(1)) if match else 0
 
                 movies_data.append({
@@ -55,7 +55,7 @@ def scrape_douban():
         df = pd.DataFrame(movies_data)
 
         if not df.empty:
-            # 故意制造缺失值 (NaN) 供下游清洗
+            # 制造缺失值
             df.loc[1, '豆瓣评分'] = np.nan
             df.loc[4, '评价人数'] = np.nan
 
