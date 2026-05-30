@@ -1,0 +1,90 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - link "DA 数据分析系统" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e7]: DA
+        - generic [ref=e8]: 数据分析系统
+      - link "上传数据" [ref=e9] [cursor=pointer]:
+        - /url: /upload
+      - link "历史记录" [ref=e10] [cursor=pointer]:
+        - /url: /history
+    - generic [ref=e11]:
+      - generic [ref=e12]: codex_chart_144921
+      - button "退出" [ref=e13] [cursor=pointer]
+  - main [ref=e14]:
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - heading "图表可视化" [level=2] [ref=e18]
+          - paragraph [ref=e19]: 线性回归 · codex_chart_144921.csv
+        - link "历史记录" [ref=e20] [cursor=pointer]:
+          - /url: /history
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - heading "图表配置" [level=3] [ref=e24]
+            - generic [ref=e25]: 散点图
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - generic [ref=e28]: 图表类型
+              - combobox "图表类型" [ref=e29]:
+                - option "散点图" [selected]
+                - option "折线图"
+                - option "柱状图"
+                - option "热力图"
+                - option "箱线图"
+                - option "饼图"
+            - generic [ref=e30]:
+              - generic [ref=e31]: X 轴字段
+              - combobox "X 轴字段" [ref=e32]:
+                - option "自动" [selected]
+            - generic [ref=e33]:
+              - generic [ref=e34]: Y 轴字段
+              - combobox "Y 轴字段" [ref=e35]:
+                - option "自动" [selected]
+            - generic [ref=e36]:
+              - generic [ref=e37]: 标题
+              - textbox "标题" [ref=e38]:
+                - /placeholder: 分析图表
+                - text: 线性回归结果
+            - generic [ref=e39]:
+              - generic [ref=e40]: 颜色
+              - textbox "图表颜色" [ref=e41]: "#1976d2"
+          - button "生成图表" [ref=e42] [cursor=pointer]
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - heading "任务概览" [level=3] [ref=e45]
+            - generic [ref=e46]: 已完成
+          - generic [ref=e47]:
+            - generic [ref=e48]:
+              - term [ref=e49]: 任务类型
+              - definition [ref=e50]: 线性回归
+            - generic [ref=e51]:
+              - term [ref=e52]: 创建时间
+              - definition [ref=e53]: 2026/05/30 14:49
+            - generic [ref=e54]:
+              - term [ref=e55]: 参数
+              - definition [ref=e56]: "x_columns: x，y_column: y"
+          - generic [ref=e57]:
+            - generic [ref=e58]:
+              - generic [ref=e59]: r2_score
+              - strong [ref=e60]: "1"
+            - generic [ref=e61]:
+              - generic [ref=e62]: mse
+              - strong [ref=e63]: "0"
+            - generic [ref=e64]:
+              - generic [ref=e65]: rmse
+              - strong [ref=e66]: "0"
+            - generic [ref=e67]:
+              - generic [ref=e68]: coefficients
+              - strong [ref=e69]: "{\"x\":62.3517}"
+            - generic [ref=e70]:
+              - generic [ref=e71]: intercept
+              - strong [ref=e72]: "115.9000"
+            - generic [ref=e73]:
+              - generic [ref=e74]: equation
+              - strong [ref=e75]: y = 115.9 + (62.3517 * x)
+      - generic [ref=e76]:
+        - heading "线性回归结果" [level=3] [ref=e78]
+        - generic "图表预览" [ref=e80]

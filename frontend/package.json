@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "test:chart": "node --test src/utils/chartInteraction.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

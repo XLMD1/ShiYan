@@ -150,18 +150,36 @@ function formatDate(dateStr) {
 }
 
 .stat-card {
-  background: var(--card-bg);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ffffff, #f8fbfc);
   padding: 1.25rem;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
   text-align: center;
+  transition: transform var(--motion-base), box-shadow var(--motion-base), border-color var(--motion-base);
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--accent), #f0a536);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
 }
 
 .stat-num {
   display: block;
   font-size: 2rem;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--accent-strong);
 }
 
 .stat-label {
@@ -192,11 +210,11 @@ function formatDate(dateStr) {
 .type-badge {
   display: inline-block;
   padding: 0.15rem 0.5rem;
-  border-radius: 4px;
+  border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 600;
-  background: #e8f4fd;
-  color: #1976d2;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
 }
 
 .type-badge.xlsx { background: #e8f5e9; color: #2e7d32; }
@@ -204,7 +222,7 @@ function formatDate(dateStr) {
 .status-badge {
   display: inline-block;
   padding: 0.15rem 0.5rem;
-  border-radius: 4px;
+  border-radius: 999px;
   font-size: 0.75rem;
   background: #fff3e0;
   color: #e65100;
@@ -232,16 +250,22 @@ function formatDate(dateStr) {
   padding: 0.2rem 0.5rem;
   margin-right: 0.25rem;
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--card-bg);
   cursor: pointer;
   font-size: 0.75rem;
   color: var(--primary);
   text-decoration: none;
   display: inline-block;
+  transition: transform var(--motion-fast), background var(--motion-fast), color var(--motion-fast), border-color var(--motion-fast);
 }
 
-.btn-action:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.btn-action:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
 
 .btn-action.danger { color: var(--danger); border-color: var(--danger); }
 
@@ -256,11 +280,28 @@ function formatDate(dateStr) {
 .btn-close {
   padding: 0.3rem 0.7rem;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: var(--card-bg);
   cursor: pointer;
   font-size: 0.8rem;
+  transition: background var(--motion-fast), transform var(--motion-fast), border-color var(--motion-fast);
 }
 
-.btn-close:hover { background: #f0f0f0; }
+.btn-close:hover {
+  background: #f8fafc;
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 760px) {
+  .dashboard-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
