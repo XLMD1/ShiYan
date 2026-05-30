@@ -132,9 +132,10 @@ function submit() {
 
 .chart-type {
   padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  background: #e8f4fd;
-  color: #1976d2;
+  border: 1px solid rgba(15,159,143,0.17);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
   font-size: 0.78rem;
   font-weight: 600;
   white-space: nowrap;

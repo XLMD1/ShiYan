@@ -54,12 +54,16 @@ function formatCell(value) {
 <style scoped>
 .data-table-wrapper {
   background: var(--card-bg);
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
-.table-container { overflow-x: auto; }
+.table-container {
+  overflow-x: auto;
+  background: #fff;
+}
 
 table {
   width: 100%;
@@ -68,7 +72,7 @@ table {
 }
 
 th, td {
-  padding: 0.55rem 0.75rem;
+  padding: 0.64rem 0.78rem;
   text-align: left;
   border-bottom: 1px solid var(--border);
   font-size: 0.82rem;
@@ -76,14 +80,19 @@ th, td {
 }
 
 th {
-  background: #f8f9fa;
-  font-weight: 600;
+  background: linear-gradient(180deg, #f9fbfc, #f3f7f9);
+  color: #3a4758;
+  font-weight: 750;
   position: sticky;
   top: 0;
   z-index: 1;
 }
 
-tr:hover td { background: #f8f9ff; }
+tr {
+  transition: background var(--motion-fast);
+}
+
+tr:hover td { background: #f6fbfa; }
 
 .row-num {
   width: 50px;
@@ -97,6 +106,9 @@ tr:hover td { background: #f8f9ff; }
   text-align: center;
   color: var(--text-muted);
   font-size: 0.9rem;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.9), rgba(248,251,252,0.9)),
+    repeating-linear-gradient(-45deg, transparent 0 18px, rgba(15,159,143,0.035) 18px 19px);
 }
 
 .pagination {
@@ -111,17 +123,19 @@ tr:hover td { background: #f8f9ff; }
 .btn-page {
   padding: 0.35rem 0.8rem;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: var(--card-bg);
   cursor: pointer;
   font-size: 0.8rem;
   color: var(--text);
+  transition: background var(--motion-fast), color var(--motion-fast), border-color var(--motion-fast), transform var(--motion-fast);
 }
 
 .btn-page:hover:not(:disabled) {
-  background: var(--primary);
+  background: var(--accent);
   color: #fff;
-  border-color: var(--primary);
+  border-color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .btn-page:disabled {

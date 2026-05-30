@@ -173,7 +173,7 @@ function formatDate(dateStr) {
 
 .type-cell {
   font-weight: 600;
-  color: var(--primary);
+  color: var(--accent-strong);
   white-space: nowrap;
 }
 
@@ -197,13 +197,15 @@ function formatDate(dateStr) {
 }
 
 .data-chip {
-  background: #f0f2f5;
+  border: 1px solid var(--border);
+  background: #f8fafc;
   color: #4a5568;
 }
 
 .metric-chip {
-  background: #e8f4fd;
-  color: #1976d2;
+  border: 1px solid rgba(15,159,143,0.17);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
 }
 
 .status-badge {
@@ -241,17 +243,19 @@ function formatDate(dateStr) {
 .btn-action {
   padding: 0.2rem 0.55rem;
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--card-bg);
   cursor: pointer;
   font-size: 0.75rem;
-  color: var(--primary);
+  color: var(--accent-strong);
+  transition: transform var(--motion-fast), background var(--motion-fast), color var(--motion-fast), border-color var(--motion-fast);
 }
 
 .btn-action:hover {
-  background: var(--primary);
+  background: var(--accent);
   color: #fff;
-  border-color: var(--primary);
+  border-color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .empty {

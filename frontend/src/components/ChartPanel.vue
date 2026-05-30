@@ -24,11 +24,14 @@ import {
 import {
   GridComponent,
   LegendComponent,
+  DataZoomComponent,
   TitleComponent,
+  ToolboxComponent,
   TooltipComponent,
   VisualMapComponent,
 } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
+import { enhanceChartOption } from '../utils/chartInteraction'
 
 use([
   BarChart,
@@ -37,9 +40,11 @@ use([
   LineChart,
   PieChart,
   ScatterChart,
+  DataZoomComponent,
   GridComponent,
   LegendComponent,
   TitleComponent,
+  ToolboxComponent,
   TooltipComponent,
   VisualMapComponent,
   CanvasRenderer,
@@ -53,8 +58,10 @@ const props = defineProps({
 const chartRef = ref(null)
 let chart = null
 
+const interactiveOption = computed(() => enhanceChartOption(props.option))
+
 const isEmpty = computed(() => {
-  const series = props.option?.series
+  const series = interactiveOption.value?.series
   return !Array.isArray(series) || series.length === 0
 })
 
@@ -70,7 +77,7 @@ function renderChart() {
     chart = init(chartRef.value)
   }
   chart.clear()
-  chart.setOption(props.option, true)
+  chart.setOption(interactiveOption.value, true)
   chart.resize()
 }
 
@@ -84,7 +91,7 @@ onMounted(() => {
 })
 
 watch(
-  () => [props.option, props.height],
+  () => [interactiveOption.value, props.height],
   () => nextTick(renderChart),
   { deep: true }
 )
@@ -117,12 +124,12 @@ onBeforeUnmount(() => {
   font-size: 0.9rem;
   background: repeating-linear-gradient(
     -45deg,
-    #fafafa,
-    #fafafa 12px,
-    #f5f6fa 12px,
-    #f5f6fa 24px
+    #fbfcfd,
+    #fbfcfd 12px,
+    #f2f7f8 12px,
+    #f2f7f8 24px
   );
   border: 1px dashed var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius);
 }
 </style>

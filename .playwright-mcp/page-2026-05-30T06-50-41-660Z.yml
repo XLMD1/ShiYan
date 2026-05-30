@@ -1,0 +1,15 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - link "DA 数据分析系统" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e7]: DA
+        - generic [ref=e8]: 数据分析系统
+      - link "上传数据" [ref=e9] [cursor=pointer]:
+        - /url: /upload
+      - link "历史记录" [ref=e10] [cursor=pointer]:
+        - /url: /history
+    - generic [ref=e11]:
+      - generic [ref=e12]: codex_chart_144921
+      - button "退出" [ref=e13] [cursor=pointer]
+  - main [ref=e14]
